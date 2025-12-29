@@ -123,6 +123,7 @@ h1.glitch-text { font-size: 3rem; font-weight: 800; font-style: italic; margin-b
 .card-key-btn {
     background: rgba(0,0,0,0.8); border: 1px solid #555; color: white; font-size: 10px;
     font-family: var(--font); padding: 5px 10px; cursor: none; display: flex; align-items: center; gap: 5px;
+    text-decoration: none;
 }
 .card-key-btn:hover { background: white; color: black; border-color: white; }
 
@@ -175,6 +176,17 @@ h1.glitch-text { font-size: 3rem; font-weight: 800; font-style: italic; margin-b
 .drive-btn:hover { background: white; color: black; border-color: white; }
 .key-btn { font-size: 10px; padding: 2px 6px; border: 1px solid #555; background: #111; color: #fff; }
 .drive-btn:hover .key-btn { border-color: #000; background: #eee; color: #000; }
+
+/* === FOOTER ICONS (FORCE WHITE) === */
+.footer-links {
+    display: flex; gap: 30px; margin-top: auto; padding-top: 20px; opacity: 0.8;
+}
+.mini-link {
+    color: #ffffff !important; transition: all 0.3s; transform: scale(1);
+    display: flex; align-items: center; justify-content: center;
+}
+.mini-link i, .mini-link svg { stroke: #ffffff !important; fill: none; }
+.mini-link:hover { opacity: 1; transform: scale(1.2); text-shadow: 0 0 10px white; }
 
 /* === MUSIC PLAYER === */
 .music-player { position: fixed; bottom: 40px; right: 50px; z-index: 50; text-align: right; display: flex; align-items: center; gap: 15px; }

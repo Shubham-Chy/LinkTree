@@ -1,29 +1,10 @@
 [
   {
-    "id": "ARCH-01",
-    "title": "Suzume no Tojimari",
-    "image": "https://images6.alphacoders.com/129/1296043.jpg",
-    "youtubeId": "F7pr9F4pP8M",
-    "decryptionKey": "SZ-8821",
-    "links": [
-      { "label": "Google Drive [4K]", "url": "#", "key": "SZ-8821" },
-      { "label": "Google Drive [1080p]", "url": "#", "key": null }
-    ]
-  },
-  {
-    "id": "ARCH-02",
-    "title": "Your Name",
-    "image": "https://images.alphacoders.com/736/736468.png",
-    "youtubeId": "a2GujJZfXpg",
-    "decryptionKey": "TK-1022",
-    "links": [{ "label": "Main Drive", "url": "#", "key": "TK-1022" }]
-  },
-  {
-    "id": "ARCH-03",
-    "title": "Weathering With You",
-    "image": "https://images5.alphacoders.com/102/1026930.jpg",
-    "youtubeId": "Q6iK6DjV_iE",
-    "decryptionKey": null,
-    "links": [{ "label": "GDrive Folder", "url": "#", "key": null }]
+    "id": "Mappa Studio",
+    "title": "Chainsaw Man - Reze Arc",
+    "image": "https://i.ibb.co/C5vfSHw0/thumbnail-00011.png",
+    "youtubeId": "OvN4MXnW2Qw",
+    "keyUrl": "https://bit.ly/chainsaw-man-reze-arc-key-anime-forensic",
+    "links": [{ "label": "Mega Drive", "url": "https://bit.ly/chainsaw-man-reze-arc-anime-forensic", "key": "SZ-8821" }]
   }
 ]

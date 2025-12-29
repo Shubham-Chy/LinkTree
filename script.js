@@ -5,6 +5,39 @@ const config = {
   audioVolume: 0.2,
 };
 
+// ==========================================
+// === ANIME DATABASE (DIRECTLY EMBEDDED) ===
+// ==========================================
+const animeData = [
+  {
+    id: "ARCH-01",
+    title: "Suzume no Tojimari",
+    image: "https://images6.alphacoders.com/129/1296043.jpg",
+    youtubeId: "F7pr9F4pP8M",
+    keyUrl: "https://example.com/get-key/suzume",
+    links: [
+      { label: "Google Drive [4K]", url: "#", key: "SZ-8821" },
+      { label: "Google Drive [1080p]", url: "#", key: null },
+    ],
+  },
+  {
+    id: "ARCH-02",
+    title: "Your Name",
+    image: "https://images.alphacoders.com/736/736468.png",
+    youtubeId: "a2GujJZfXpg",
+    keyUrl: "https://example.com/get-key/yourname",
+    links: [{ label: "Main Drive", url: "#", key: "TK-1022" }],
+  },
+  {
+    id: "ARCH-03",
+    title: "Weathering With You",
+    image: "https://images5.alphacoders.com/102/1026930.jpg",
+    youtubeId: "Q6iK6DjV_iE",
+    keyUrl: null,
+    links: [{ label: "GDrive Folder", url: "#", key: null }],
+  },
+];
+
 // === DOM ELEMENTS ===
 const grid = document.getElementById("anime-grid");
 const searchInput = document.getElementById("search-input");
@@ -18,28 +51,30 @@ const app = document.getElementById("app");
 const cursorDot = document.getElementById("cursor-dot");
 const cursorRing = document.getElementById("cursor-ring");
 
-let animeData = [];
+// === AUDIO SETUP ===
+const audio = document.getElementById("bg-music");
+const playBtn = document.getElementById("play-btn");
+const playIcon = document.getElementById("play-icon");
+const musicContainer = document.querySelector(".music-player");
+
+audio.volume = config.audioVolume;
+let isPlaying = false;
+let audioContext,
+  analyser,
+  dataArray,
+  source,
+  visualizerInitialized = false;
 
 // ============================
-// === 1. DATA FETCHING ===
+// === 1. STARTUP & GRID ===
 // ============================
-async function loadAnimeData() {
-  try {
-    const response = await fetch("data.json");
-    if (!response.ok) throw new Error("Failed to load database");
-    animeData = await response.json();
-    renderGrid(animeData);
-    initLoader();
-  } catch (error) {
-    console.error(error);
-    loaderText.innerHTML = `<span style="color:red">ERROR: DATABASE CONNECTION FAILED.</span>`;
-    renderGrid([]);
-  }
+
+// Initialize App Directly
+function initApp() {
+  renderGrid(animeData);
+  initLoader();
 }
 
-// ============================
-// === 2. GRID & SEARCH LOGIC ===
-// ============================
 function renderGrid(data) {
   grid.innerHTML = "";
 
@@ -53,9 +88,9 @@ function renderGrid(data) {
     const card = document.createElement("div");
     card.className = "anime-card";
 
-    // Key Button
-    const keyBtnHtml = anime.decryptionKey
-      ? `<button class="card-key-btn" title="Copy Key" onclick="copyKey(event, '${anime.decryptionKey}')"><i data-lucide="key"></i> KEY</button>`
+    // Key Button Logic (Redirect)
+    const keyBtnHtml = anime.keyUrl
+      ? `<a href="${anime.keyUrl}" target="_blank" class="card-key-btn" title="Get Key"><i data-lucide="key"></i> GET KEY</a>`
       : "";
 
     card.innerHTML = `
@@ -66,8 +101,11 @@ function renderGrid(data) {
             </div>
         `;
 
+    // Click Logic
     card.addEventListener("click", (e) => {
-      if (!e.target.closest(".card-key-btn")) openModal(anime);
+      if (!e.target.closest(".card-key-btn")) {
+        openModal(anime);
+      }
     });
 
     grid.appendChild(card);
@@ -75,24 +113,6 @@ function renderGrid(data) {
 
   lucide.createIcons();
 }
-
-window.copyKey = (e, key) => {
-  e.stopPropagation();
-  navigator.clipboard.writeText(key).then(() => {
-    const btn = e.target.closest("button");
-    const originalHtml = btn.innerHTML;
-    btn.innerHTML = `<i data-lucide="check"></i> COPIED`;
-    btn.style.color = "#00ff00";
-    btn.style.borderColor = "#00ff00";
-    lucide.createIcons();
-    setTimeout(() => {
-      btn.innerHTML = originalHtml;
-      btn.style.color = "";
-      btn.style.borderColor = "";
-      lucide.createIcons();
-    }, 2000);
-  });
-};
 
 searchInput.addEventListener("input", (e) => {
   const term = e.target.value.toLowerCase();
@@ -103,7 +123,7 @@ searchInput.addEventListener("input", (e) => {
 });
 
 // ============================
-// === 3. MODAL & VIDEO LOGIC ===
+// === 2. MODAL & VIDEO LOGIC ===
 // ============================
 function openModal(anime) {
   document.getElementById("modal-title").innerText = anime.title;
@@ -176,20 +196,8 @@ function closeModal() {
 }
 
 // ============================
-// === 4. LOADING & AUDIO ===
+// === 3. LOADING & AUDIO ===
 // ============================
-const audio = document.getElementById("bg-music");
-const playBtn = document.getElementById("play-btn");
-const playIcon = document.getElementById("play-icon");
-const musicContainer = document.querySelector(".music-player");
-audio.volume = config.audioVolume;
-let isPlaying = false;
-let audioContext,
-  analyser,
-  dataArray,
-  source,
-  visualizerInitialized = false;
-
 let progress = 0;
 function initLoader() {
   const interval = setInterval(() => {
@@ -301,7 +309,7 @@ playBtn.addEventListener("click", (e) => {
 });
 
 // ============================
-// === 5. VISUALS (Particles & Cursor) ===
+// === 4. VISUALS (Particles & Cursor) ===
 // ============================
 document.addEventListener("mousemove", (e) => {
   cursorDot.style.left = `${e.clientX}px`;
@@ -377,4 +385,4 @@ document.addEventListener("keydown", (e) => {
 
 // START
 initParticles();
-loadAnimeData();
+initApp();
