@@ -5,26 +5,6 @@ const config = {
   audioVolume: 0.2,
 };
 
-// ==========================================
-// === ANIME DATABASE (DIRECTLY EMBEDDED) ===
-// ==========================================
-const animeData = [
-  {
-    id: "Mappa Studio",
-    title: "Chainsaw Man - Reze Arc",
-    image: "https://i.ibb.co/C5vfSHw0/thumbnail-00011.png",
-    youtubeId: "OvN4MXnW2Qw",
-    keyUrl: "https://bit.ly/chainsaw-man-reze-arc-key-anime-forensic",
-    links: [
-      {
-        label: "Mega Drive",
-        url: "https://bit.ly/chainsaw-man-reze-arc-anime-forensic",
-        key: "SZ-8821",
-      },
-    ],
-  },
-];
-
 // === DOM ELEMENTS ===
 const grid = document.getElementById("anime-grid");
 const searchInput = document.getElementById("search-input");
@@ -52,14 +32,32 @@ let audioContext,
   source,
   visualizerInitialized = false;
 
+// Store fetched data here
+let animeData = [];
+
 // ============================
-// === 1. STARTUP & GRID ===
+// === 1. STARTUP & FETCH ===
 // ============================
 
-// Initialize App Directly
+// Initialize App: Fetch Data -> Render Grid -> Start Loader
 function initApp() {
-  renderGrid(animeData);
-  initLoader();
+  fetch("data.json")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("HTTP error " + response.status);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      animeData = data; // Store data globally for search
+      renderGrid(animeData);
+      initLoader(); // Only start loader if data loads successfully
+    })
+    .catch((error) => {
+      console.error("Database Error:", error);
+      loaderText.innerHTML = `<span style="color:red; font-weight:bold;">ERROR: DATABASE CONNECTION FAILED.</span>`;
+      // Stop loader at 0% to indicate fatal error
+    });
 }
 
 function renderGrid(data) {
