@@ -1,0 +1,11 @@
+  {
+    "id": "ARCH-00",
+    "title": "INSERT TITLE HERE",
+    "image": "INSERT_IMAGE_URL_HERE",
+    "youtubeId": "VIDEO_ID_HERE", 
+    "keyUrl": "INSERT_REDIRECT_URL_HERE",
+    "links": [
+      { "label": "Google Drive", "url": "#", "key": "1234" },
+      { "label": "Mega.nz", "url": "#", "key": null }
+    ]
+  },
