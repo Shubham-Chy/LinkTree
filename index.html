@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shubham Choudhary | LinkTree</title>
+    <title>Anime Forensic</title>
+    <meta name="description" content="Anime Forensic Archive - Explore and Analyze Anime Data with Advanced Forensic Tools.">
+    <meta name="keywords" content="Anime Forensic, Anime Archive, Anime Data Analysis, Anime Research, Anime Database">
+    <meta name="author" content="Shubham Choudhary">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +24,7 @@
     <div id="cursor-dot"></div>
     <div id="cursor-ring"></div>
 
-    <!-- CANVAS BACKGROUND (Cherry Blossoms) -->
+    <!-- CANVAS BACKGROUND -->
     <canvas id="canvas-bg"></canvas>
 
     <!-- LOADING SCREEN -->
@@ -35,10 +38,10 @@
                 <div id="progress-bar"></div>
             </div>
             <div class="loader-text">
-                <span class="prefix">></span> ESTABLISHING SECURE LINK-NODE CONNECTION...
+                <span class="prefix">></span> ESTABLISHING DATABASE CONNECTION...
             </div>
         </div>
-        <div class="version-tag">VER 2.0.5 // STABLE</div>
+        <div class="version-tag">VER 3.0.0 // ARCHIVE</div>
     </div>
 
     <!-- MAIN UI -->
@@ -55,58 +58,55 @@
         <div class="ui-corner br"></div>
         
         <div class="vertical-text left">未来の記憶</div>
-        <div class="vertical-text right">リンク集</div>
+        <div class="vertical-text right">アーカイブ</div>
 
-        <!-- Profile Content -->
-        <div class="content-container">
-            <div class="subtitle">デジタル・アーカイブ</div>
-            
-            <div class="title-wrapper">
-                <h1 class="glitch-text" data-text="SHUBHAM">SHUBHAM</h1>
-                <h1 class="outline-text">CHOUDHARY</h1>
+        <!-- Header Content -->
+        <div class="header-container">
+            <h1 class="glitch-text" data-text="ANIME FORENSIC">ANIME FORENSIC</h1>
+            <div class="search-wrapper">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="search-input" placeholder="SEARCH ARCHIVE [ENTER NAME]...">
             </div>
+        </div>
 
-            <div class="identity-badge">
-                <span class="handle">@animeforensic</span>
-                <span class="uid">ID: 0x92-F1-AC</span>
-            </div>
+        <!-- ANIME GRID (Cards will be injected here) -->
+        <div id="anime-grid" class="anime-grid">
+            <!-- JS will populate this -->
+        </div>
 
-            <p class="bio">| ANALYZING THE FRAME. DECODING THE STORY.</p>
+        <!-- ORIGINAL LINKS (Moved to footer area) -->
+        <div class="footer-links">
+            <a href="https://github.com/Shubham-Chy/" target="_blank" class="mini-link"><i data-lucide="github"></i></a>
+            <a href="https://discord.gg/HBzBMwP22G" target="_blank" class="mini-link"><i data-lucide="message-square"></i></a>
+            <a href="https://www.youtube.com/@animeforensic" target="_blank" class="mini-link"><i data-lucide="youtube"></i></a>
+        </div>
 
-            <!-- Links Section -->
-            <div class="links-grid">
-                <a href="https://github.com/Shubham-Chy/" target="_blank" class="link-card">
-                    <div class="card-bg"></div>
-                    <span class="link-idx">01</span>
-                    <span class="link-label">GITHUB REPOSITORY</span>
-                    <i data-lucide="github" class="icon"></i>
-                </a>
-
-                <a href="https://discord.gg/HBzBMwP22G" target="_blank" class="link-card">
-                    <div class="card-bg"></div>
-                    <span class="link-idx">02</span>
-                    <span class="link-label">DISCORD COMMUNITY</span>
-                    <i data-lucide="message-square" class="icon"></i>
-                </a>
-
-                <a href="https://www.youtube.com/@animeforensic" target="_blank" class="link-card">
-                    <div class="card-bg"></div>
-                    <span class="link-idx">03</span>
-                    <span class="link-label">YOUTUBE CHANNEL</span>
-                    <i data-lucide="youtube" class="icon"></i>
-                </a>
+        <!-- MODAL (Popup) -->
+        <div id="modal-overlay" class="modal-overlay hidden">
+            <div class="modal-content">
+                <button id="close-modal" class="close-btn"><i data-lucide="x"></i></button>
+                <div class="modal-header">
+                    <h2 id="modal-title">ANIME TITLE</h2>
+                    <span class="modal-id">ID: <span id="modal-id">000</span></span>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-image-wrapper">
+                        <img id="modal-img" src="" alt="Cover">
+                    </div>
+                    <div id="modal-links" class="modal-links-list">
+                        <!-- Links injected here -->
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Music Player -->
         <div class="music-player">
-            <!-- IMPORTANT: crossorigin="anonymous" needed for visualizer -->
             <audio id="bg-music" loop crossorigin="anonymous">
                 <source src="suzume.mp3" type="audio/mp3">
             </audio>
             
             <div class="music-info">
-                <!-- Visualizer Canvas injected here by JS -->
                 <div class="music-label">オーディオ</div>
                 <div class="track-name">
                     <span class="status-dot"></span>
@@ -122,8 +122,6 @@
     </main>
 
     <script src="script.js"></script>
-    <script>
-        lucide.createIcons();
-    </script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>

@@ -13,15 +13,10 @@ body {
     background-color: var(--bg);
     color: var(--white);
     font-family: var(--font);
-    overflow: hidden;
-    height: 100vh;
-    
-    /* DISABLE SELECTION */
+    overflow-x: hidden;
+    min-height: 100vh;
     user-select: none;
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-touch-callout: none;
 }
 
 /* === CUSTOM CURSOR === */
@@ -39,7 +34,7 @@ body.hovering #cursor-ring {
     width: 50px; height: 50px; background: rgba(255,255,255,0.1); border-color: white;
 }
 
-/* === BACKGROUND LAYERS === */
+/* === BACKGROUND === */
 #canvas-bg {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
 }
@@ -48,7 +43,6 @@ body.hovering #cursor-ring {
     background: radial-gradient(circle, transparent 40%, black 120%);
     z-index: -1; pointer-events: none;
 }
-/* Optional BG Image Layer behind canvas */
 body::before {
     content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: url('bg.jpg') no-repeat center center/cover;
@@ -62,7 +56,6 @@ body::before {
     flex-direction: column;
 }
 .loader-content { width: 300px; }
-.loader-top { display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
 .progress-container { width: 100%; height: 2px; background: #222; margin-bottom: 10px; }
 #progress-bar { width: 0%; height: 100%; background: white; box-shadow: 0 0 10px white; transition: width 0.1s; }
 .loader-text { font-size: 10px; color: #666; letter-spacing: 1px; }
@@ -70,10 +63,12 @@ body::before {
 .blink { animation: blinker 1s linear infinite; }
 @keyframes blinker { 50% { opacity: 0; } }
 
-/* === UI ELEMENTS === */
+/* === UI LAYOUT === */
 .hidden { opacity: 0; pointer-events: none; }
-#app { opacity: 1; transition: opacity 1.5s ease; height: 100%; position: relative; }
-
+#app {
+    opacity: 1; transition: opacity 1.5s ease; position: relative;
+    padding: 80px 40px; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+}
 .ui-corner { position: fixed; width: 20px; height: 20px; border-color: rgba(255,255,255,0.3); z-index: 10; }
 .tl { top: 30px; left: 30px; border-top: 1px solid; border-left: 1px solid; }
 .tr { top: 30px; right: 30px; border-top: 1px solid; border-right: 1px solid; }
@@ -83,80 +78,112 @@ body::before {
 .vertical-text {
     position: fixed; top: 50%; transform: translateY(-50%);
     writing-mode: vertical-rl; text-orientation: upright;
-    letter-spacing: 0.5em; font-size: 12px; color: rgba(255,255,255,0.2);
-    font-weight: bold; pointer-events: none;
+    letter-spacing: 0.5em; font-size: 12px; color: rgba(255,255,255,0.2); pointer-events: none;
 }
 .left { left: 40px; } .right { right: 40px; }
 
-/* === MAIN CONTENT === */
-.content-container {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center; width: 100%; max-width: 500px; padding: 20px;
-    z-index: 20;
+/* === HEADER & SEARCH === */
+.header-container { text-align: center; margin-bottom: 60px; width: 100%; max-width: 800px; z-index: 20; }
+h1.glitch-text { font-size: 3rem; font-weight: 800; font-style: italic; margin-bottom: 30px; letter-spacing: -2px; }
+
+.search-wrapper { position: relative; width: 100%; max-width: 600px; margin: 0 auto; }
+#search-input {
+    width: 100%; background: rgba(0,0,0,0.6); border: 1px solid #333; padding: 15px 50px;
+    color: white; font-family: var(--font); font-size: 14px; outline: none; transition: all 0.3s ease; cursor: none;
 }
+#search-input:focus { border-color: white; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
+.search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #666; width: 18px; }
 
-.subtitle { font-size: 10px; letter-spacing: 0.3em; margin-bottom: 15px; color: #888; }
-
-.title-wrapper { margin-bottom: 30px; position: relative; }
-h1 { font-size: 4rem; font-style: italic; line-height: 0.9; letter-spacing: -2px; margin: 0; }
-.outline-text { color: transparent; -webkit-text-stroke: 1px white; opacity: 0.8; }
-
-.identity-badge { 
-    display: inline-flex; align-items: center; gap: 15px; 
-    margin-bottom: 30px; 
+/* === ANIME GRID === */
+.anime-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;
+    width: 100%; max-width: 1200px; z-index: 20; margin-bottom: 80px;
 }
-.handle { background: white; color: black; padding: 4px 8px; font-weight: bold; font-size: 12px; }
-.uid { font-size: 10px; color: #666; }
-
-.bio { font-size: 12px; opacity: 0.7; margin-bottom: 50px; border-left: 2px solid white; padding-left: 15px; text-align: left; display: inline-block;}
-
-/* === LINKS === */
-.links-grid { display: flex; flex-direction: column; gap: 15px; width: 100%; }
-
-.link-card {
-    position: relative; display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 25px; text-decoration: none; color: white; border: 1px solid #333;
-    overflow: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    background: rgba(0,0,0,0.4); backdrop-filter: blur(5px);
+.anime-card {
+    position: relative; aspect-ratio: 16 / 9; overflow: hidden; border: 1px solid #333; cursor: none;
+    transition: all 0.3s; background: #000;
 }
-
-.card-bg {
-    position: absolute; top: 0; left: 0; width: 0%; height: 100%;
-    background: white; z-index: -1; transition: width 0.3s ease;
+.anime-card img {
+    width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(1.2);
+    transition: all 0.5s ease; opacity: 0.7;
 }
+.anime-card:hover { border-color: white; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); z-index: 10; }
+.anime-card:hover img { filter: grayscale(0%) contrast(1); transform: scale(1.05); opacity: 1; }
 
-.link-card:hover { border-color: white; transform: translateX(10px); color: black; }
-.link-card:hover .card-bg { width: 100%; }
+.card-overlay {
+    position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px;
+    background: linear-gradient(to top, black, transparent);
+    transform: translateY(100%); transition: transform 0.3s ease;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.anime-card:hover .card-overlay { transform: translateY(0); }
+.card-title { font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
 
-.link-idx { font-size: 10px; opacity: 0.5; font-weight: bold; margin-right: 15px; }
-.link-label { flex-grow: 1; text-align: left; font-weight: bold; letter-spacing: 1px; font-size: 14px; }
-.icon { width: 18px; height: 18px; }
+/* Key Button on Card */
+.card-key-btn {
+    background: rgba(0,0,0,0.8); border: 1px solid #555; color: white; font-size: 10px;
+    font-family: var(--font); padding: 5px 10px; cursor: none; display: flex; align-items: center; gap: 5px;
+}
+.card-key-btn:hover { background: white; color: black; border-color: white; }
+
+/* === MODAL POPUP === */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 1000;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.modal-overlay.active { opacity: 1; pointer-events: all; }
+
+.modal-content {
+    background: #050505; border: 1px solid white; width: 90%; max-width: 600px;
+    padding: 30px; position: relative; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+}
+.close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; cursor: none; }
+
+.modal-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+#modal-title { font-size: 1.2rem; font-style: italic; font-weight: 800; }
+.modal-id { font-size: 0.8rem; color: #666; }
+
+/* Modal Video Player */
+.modal-image-wrapper {
+    width: 100%; aspect-ratio: 16/9; overflow: hidden; border: 1px solid #333; position: relative; background: #000; margin-bottom: 20px;
+}
+#modal-img { width: 100%; height: 100%; object-fit: cover; }
+
+.video-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center;
+    opacity: 0; transition: opacity 0.3s ease; cursor: none;
+}
+.modal-image-wrapper:hover .video-overlay { opacity: 1; }
+
+.play-icon-overlay {
+    width: 60px; height: 60px; background: rgba(255,255,255,0.9); border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 0 20px rgba(255,255,255,0.5); transition: transform 0.2s;
+}
+.modal-image-wrapper:hover .play-icon-overlay { transform: scale(1.1); }
+.youtube-frame { width: 100%; height: 100%; border: none; }
+
+/* Links */
+.modal-links-list { display: flex; flex-direction: column; gap: 10px; }
+.drive-btn {
+    display: flex; justify-content: space-between; align-items: center; padding: 15px;
+    background: #0a0a0a; border: 1px solid #333; color: white; text-decoration: none; font-size: 12px; cursor: none;
+}
+.drive-btn:hover { background: white; color: black; border-color: white; }
+.key-btn { font-size: 10px; padding: 2px 6px; border: 1px solid #555; background: #111; color: #fff; }
+.drive-btn:hover .key-btn { border-color: #000; background: #eee; color: #000; }
 
 /* === MUSIC PLAYER === */
-.music-player {
-    position: fixed; bottom: 40px; right: 50px; z-index: 50;
-    text-align: right; display: flex; align-items: center; gap: 15px;
-}
+.music-player { position: fixed; bottom: 40px; right: 50px; z-index: 50; text-align: right; display: flex; align-items: center; gap: 15px; }
 .music-info { display: flex; flex-direction: column; align-items: flex-end; }
 .music-label { font-size: 9px; color: #666; margin-bottom: 2px; }
 .track-name { font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
 .status-dot { width: 6px; height: 6px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 5px #00ff00; opacity: 0.5; }
 .playing .status-dot { opacity: 1; animation: pulse 2s infinite; }
-
-.play-btn {
-    background: transparent; border: 1px solid #444; color: white;
-    width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
-    cursor: none; transition: all 0.2s;
-}
+.play-btn { background: transparent; border: 1px solid #444; color: white; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: none; }
 .play-btn:hover { background: white; color: black; border-color: white; }
 
-@keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    h1 { font-size: 2.5rem; }
-    .vertical-text, .ui-corner { display: none; }
-    .content-container { width: 90%; }
-    .music-player { bottom: 20px; right: 20px; }
-}
+@media (max-width: 768px) { h1.glitch-text { font-size: 2rem; } .vertical-text, .ui-corner { display: none; } #app { padding: 40px 20px; } }
