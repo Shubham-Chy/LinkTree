@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shubham Choudhary | LinkTree</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- CUSTOM CURSOR -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <!-- CANVAS BACKGROUND (Cherry Blossoms) -->
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- LOADING SCREEN -->
+    <div id="loader">
+        <div class="loader-content">
+            <div class="loader-top">
+                <span class="blink">SYSTEM_BOOT</span>
+                <span id="loader-percent">0%</span>
+            </div>
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div class="loader-text">
+                <span class="prefix">></span> ESTABLISHING SECURE LINK-NODE CONNECTION...
+            </div>
+        </div>
+        <div class="version-tag">VER 2.0.5 // STABLE</div>
+    </div>
+
+    <!-- MAIN UI -->
+    <main id="app" class="hidden">
+        
+        <!-- Background Overlay -->
+        <div class="vignette"></div>
+        <div class="scanlines"></div>
+
+        <!-- Decorative UI Elements -->
+        <div class="ui-corner tl"></div>
+        <div class="ui-corner tr"></div>
+        <div class="ui-corner bl"></div>
+        <div class="ui-corner br"></div>
+        
+        <div class="vertical-text left">未来の記憶</div>
+        <div class="vertical-text right">リンク集</div>
+
+        <!-- Profile Content -->
+        <div class="content-container">
+            <div class="subtitle">デジタル・アーカイブ</div>
+            
+            <div class="title-wrapper">
+                <h1 class="glitch-text" data-text="SHUBHAM">SHUBHAM</h1>
+                <h1 class="outline-text">CHOUDHARY</h1>
+            </div>
+
+            <div class="identity-badge">
+                <span class="handle">@animeforensic</span>
+                <span class="uid">ID: 0x92-F1-AC</span>
+            </div>
+
+            <p class="bio">| ANALYZING THE FRAME. DECODING THE STORY.</p>
+
+            <!-- Links Section -->
+            <div class="links-grid">
+                <a href="https://github.com/Shubham-Chy/" target="_blank" class="link-card">
+                    <div class="card-bg"></div>
+                    <span class="link-idx">01</span>
+                    <span class="link-label">GITHUB REPOSITORY</span>
+                    <i data-lucide="github" class="icon"></i>
+                </a>
+
+                <a href="https://discord.gg/HBzBMwP22G" target="_blank" class="link-card">
+                    <div class="card-bg"></div>
+                    <span class="link-idx">02</span>
+                    <span class="link-label">DISCORD COMMUNITY</span>
+                    <i data-lucide="message-square" class="icon"></i>
+                </a>
+
+                <a href="https://www.youtube.com/@animeforensic" target="_blank" class="link-card">
+                    <div class="card-bg"></div>
+                    <span class="link-idx">03</span>
+                    <span class="link-label">YOUTUBE CHANNEL</span>
+                    <i data-lucide="youtube" class="icon"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Music Player -->
+        <div class="music-player">
+            <!-- IMPORTANT: crossorigin="anonymous" needed for visualizer -->
+            <audio id="bg-music" loop crossorigin="anonymous">
+                <source src="suzume.mp3" type="audio/mp3">
+            </audio>
+            
+            <div class="music-info">
+                <!-- Visualizer Canvas injected here by JS -->
+                <div class="music-label">オーディオ</div>
+                <div class="track-name">
+                    <span class="status-dot"></span>
+                    SUZUME // FEAT. TOAKA
+                </div>
+            </div>
+            
+            <button id="play-btn" class="play-btn">
+                <i data-lucide="play" id="play-icon"></i>
+            </button>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
