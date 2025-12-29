@@ -27,11 +27,14 @@ const App: React.FC = () => {
       <CherryBlossoms />
       
       {/* Background Image Layer */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <img 
-          src={CONFIG.avatar} 
-          alt="Background" 
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-black">
+        <img
+          src={CONFIG.avatar}
+          alt="Background"
           className="w-full h-full object-cover grayscale contrast-[1.1] brightness-[0.25] scale-105"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none';
+          }}
         />
         {/* Subtle overlay for depth */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black" />
