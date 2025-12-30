@@ -12,5 +12,24 @@
         "key": "700+"
       }
     ]
+  },
+  {
+    "id": "CoMix Wave Films",
+    "title": "Suzume",
+    "image": "https://i.ibb.co/JW39FYYC/Suzume-1-00001.png",
+    "youtubeId": "#",
+    "keyUrl": "https://work.ink/2bBx/suzume",
+    "links": [
+      {
+        "label": "Mega Drive - 1",
+        "url": "https://mega.nz/folder/W9g0hTyL",
+        "key": "360"
+      },
+      {
+        "label": "Mega Drive - 2",
+        "url": "https://mega.nz/folder/wjomFKIA",
+        "key": "540"
+      }
+    ]
   }
 ]
