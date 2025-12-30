@@ -41,7 +41,15 @@ let animeData = [];
 
 // Initialize App: Fetch Data -> Render Grid -> Start Loader
 function initApp() {
-  fetch("data.json")
+  // CACHE BUSTING: Add timestamp to prevent browser caching
+  const timestamp = new Date().getTime();
+
+  fetch(`data.json?v=${timestamp}`, {
+    cache: "no-store", // Don't use cached version
+    headers: {
+      "Cache-Control": "no-cache",
+    },
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error("HTTP error " + response.status);
@@ -49,12 +57,13 @@ function initApp() {
       return response.json();
     })
     .then((data) => {
+      console.log("✅ Data loaded successfully:", data.length, "items"); // Debug log
       animeData = data;
       renderGrid(animeData);
       initLoader();
     })
     .catch((error) => {
-      console.error("Database Error:", error);
+      console.error("❌ Database Error:", error);
       loaderTextSpan.innerHTML = `<span style="color:red;">DATABASE ERROR</span>`;
       percentText.style.color = "red";
     });
@@ -74,7 +83,7 @@ function renderGrid(data) {
     card.className = "anime-card";
 
     const keyBtnHtml = anime.keyUrl
-      ? `<a href="${anime.keyUrl}" target="_blank" class="card-key-btn" title="Get Key"><i data-lucide="key"></i> GET KEY</a>`
+      ? `<a href="${anime.keyUrl}" target="_blank" rel="noopener noreferrer" class="card-key-btn" title="Get Key"><i data-lucide="key"></i> GET KEY</a>`
       : "";
 
     card.innerHTML = `
@@ -95,6 +104,7 @@ function renderGrid(data) {
   });
 
   lucide.createIcons();
+  console.log("✅ Grid rendered with", data.length, "cards"); // Debug log
 }
 
 searchInput.addEventListener("input", (e) => {
@@ -113,7 +123,7 @@ function openModal(anime) {
   document.getElementById("modal-id").innerText = anime.id;
 
   const wrapper = document.querySelector(".modal-image-wrapper");
-  if (anime.youtubeId) {
+  if (anime.youtubeId && anime.youtubeId !== "#") {
     wrapper.innerHTML = `
             <img id="modal-img" src="${anime.image}" alt="Cover">
             <div class="video-overlay" onclick="playVideo('${anime.youtubeId}')">
@@ -133,6 +143,7 @@ function openModal(anime) {
     const btn = document.createElement("a");
     btn.href = link.url;
     btn.target = "_blank";
+    btn.rel = "noopener noreferrer";
     btn.className = "drive-btn";
     let html = `<span><i data-lucide="hard-drive"></i> ${link.label}</span>`;
     if (link.key) html += `<span class="key-btn">KEY: ${link.key}</span>`;
