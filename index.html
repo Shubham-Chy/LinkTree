@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shubham Choudhary | Archive</title>
+    <title>Anime Forensic</title>
+    <meta name="description" content="Anime Forensic Archive - Explore and Analyze Anime Clips In 4K.">
+    <meta name="keywords" content="Anime Forensic, Anime Archive, Anime Data Analysis, Anime Research, Anime Database, 4K Anime Clips, Anime Forensics, Anime Investigation, Anime Study, Anime Collection, Anime Library, Anime Resources, Anime Clips, High-Quality Anime, Anime Research Tools, Anime Data, Anime Insights, Anime Exploration, Anime Analytics, Anime Information, Anime Knowledge Base, Anime Reference, Anime Documentation, Anime Catalog, Anime Archive Platform">
+    <meta name="author" content="Shubham Choudhary">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,37 +27,25 @@
     <!-- CANVAS BACKGROUND -->
     <canvas id="canvas-bg"></canvas>
 
-    <!-- SYSTEM STATUS PANEL (NEW) -->
-    <div class="system-status">
-        <div class="status-line">
-            <span class="status-label">SYSTEM TIME</span>
-            <span class="status-value" id="system-time">00:00:00</span>
-        </div>
-        <div class="status-line">
-            <span class="status-label">STATUS</span>
-            <span class="status-value status-online">ONLINE</span>
-        </div>
-        <div class="status-line">
-            <span class="status-label">PING</span>
-            <span class="status-value" id="system-ping">--ms</span>
-        </div>
-    </div>
-
-    <!-- LOADING SCREEN -->
+    <!-- LOADING SCREEN (LOGO VERSION) -->
     <div id="loader">
         <div class="loader-content">
-            <div class="loader-top">
-                <span class="blink">SYSTEM_BOOT</span>
-                <span id="loader-percent">0%</span>
+            <!-- LOGO (Replace 'logo.png' with your logo file) -->
+            <div class="logo-container">
+                <img src="logo.png" alt="Anime Forensic" class="loader-logo">
             </div>
+            
+            <!-- Progress Bar -->
             <div class="progress-container">
                 <div id="progress-bar"></div>
             </div>
-            <div class="loader-text">
-                <span class="prefix">></span> ESTABLISHING DATABASE CONNECTION...
+            
+            <!-- Status Text -->
+            <div class="loader-status">
+                <span id="loader-percent">0%</span>
+                <span id="loader-text">LOADING...</span>
             </div>
         </div>
-        <div class="version-tag">VER 3.0.0 // ARCHIVE</div>
     </div>
 
     <!-- MAIN UI -->

@@ -3,72 +3,6 @@ const config = {
   loaderSpeed: 30,
   particleCount: 60,
   audioVolume: 0.2,
-  soundEnabled: true, // Toggle UI sounds
-};
-
-// === SOUND EFFECTS (Web Audio API - No files needed!) ===
-const SFX = {
-  audioContext: null,
-
-  init() {
-    this.audioContext = new (window.AudioContext ||
-      window.webkitAudioContext)();
-  },
-
-  playBeep(frequency = 800, duration = 50, volume = 0.1) {
-    if (!config.soundEnabled || !this.audioContext) return;
-
-    const oscillator = this.audioContext.createOscillator();
-    const gainNode = this.audioContext.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(this.audioContext.destination);
-
-    oscillator.frequency.value = frequency;
-    oscillator.type = "sine";
-
-    gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(
-      0.01,
-      this.audioContext.currentTime + duration / 1000
-    );
-
-    oscillator.start(this.audioContext.currentTime);
-    oscillator.stop(this.audioContext.currentTime + duration / 1000);
-  },
-
-  hover() {
-    this.playBeep(1200, 30, 0.05);
-  },
-  click() {
-    this.playBeep(800, 80, 0.08);
-  },
-  modal() {
-    this.playBeep(600, 120, 0.1);
-  },
-};
-
-// === FAVORITES SYSTEM ===
-const Favorites = {
-  get() {
-    const stored = localStorage.getItem("animeFavorites");
-    return stored ? JSON.parse(stored) : [];
-  },
-
-  toggle(id) {
-    let favs = this.get();
-    if (favs.includes(id)) {
-      favs = favs.filter((fav) => fav !== id);
-    } else {
-      favs.push(id);
-    }
-    localStorage.setItem("animeFavorites", JSON.stringify(favs));
-    return favs.includes(id);
-  },
-
-  isFavorite(id) {
-    return this.get().includes(id);
-  },
 };
 
 // === DOM ELEMENTS ===
@@ -79,7 +13,7 @@ const closeModalBtn = document.getElementById("close-modal");
 const loader = document.getElementById("loader");
 const progressBar = document.getElementById("progress-bar");
 const percentText = document.getElementById("loader-percent");
-const loaderText = document.querySelector(".loader-text");
+const loaderTextSpan = document.getElementById("loader-text");
 const app = document.getElementById("app");
 const cursorDot = document.getElementById("cursor-dot");
 const cursorRing = document.getElementById("cursor-ring");
@@ -97,35 +31,21 @@ let audioContext,
   dataArray,
   source,
   visualizerInitialized = false;
+
+// Store fetched data here
 let animeData = [];
-
-// === SYSTEM STATUS CLOCK ===
-function updateSystemTime() {
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString("en-US", { hour12: false });
-  document.getElementById("system-time").textContent = timeStr;
-}
-
-function updatePing() {
-  const ping = Math.floor(Math.random() * 30) + 15; // Fake ping 15-45ms
-  document.getElementById("system-ping").textContent = `${ping}ms`;
-}
-
-setInterval(updateSystemTime, 1000);
-setInterval(updatePing, 3000);
-updateSystemTime();
-updatePing();
 
 // ============================
 // === 1. STARTUP & FETCH ===
 // ============================
-function initApp() {
-  // Initialize SFX
-  SFX.init();
 
+// Initialize App: Fetch Data -> Render Grid -> Start Loader
+function initApp() {
   fetch("data.json")
     .then((response) => {
-      if (!response.ok) throw new Error("HTTP error " + response.status);
+      if (!response.ok) {
+        throw new Error("HTTP error " + response.status);
+      }
       return response.json();
     })
     .then((data) => {
@@ -135,7 +55,8 @@ function initApp() {
     })
     .catch((error) => {
       console.error("Database Error:", error);
-      loaderText.innerHTML = `<span style="color:red; font-weight:bold;">ERROR: DATABASE CONNECTION FAILED.</span>`;
+      loaderTextSpan.innerHTML = `<span style="color:red;">DATABASE ERROR</span>`;
+      percentText.style.color = "red";
     });
 }
 
@@ -152,40 +73,20 @@ function renderGrid(data) {
     const card = document.createElement("div");
     card.className = "anime-card";
 
-    // Check if favorited
-    const isFav = Favorites.isFavorite(anime.id);
-
-    // Key Button
     const keyBtnHtml = anime.keyUrl
       ? `<a href="${anime.keyUrl}" target="_blank" class="card-key-btn" title="Get Key"><i data-lucide="key"></i> GET KEY</a>`
       : "";
 
     card.innerHTML = `
             <img src="${anime.image}" loading="lazy" alt="${anime.title}">
-            <button class="fav-btn ${isFav ? "active" : ""}" data-id="${
-      anime.id
-    }" title="Favorite">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-            </button>
             <div class="card-overlay">
                 <div class="card-title">${anime.title}</div>
                 ${keyBtnHtml}
             </div>
         `;
 
-    // Favorite Button Logic
-    const favBtn = card.querySelector(".fav-btn");
-    favBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      SFX.click();
-      const newState = Favorites.toggle(anime.id);
-      favBtn.classList.toggle("active", newState);
-    });
-
-    // Open Modal
     card.addEventListener("click", (e) => {
-      if (!e.target.closest(".card-key-btn") && !e.target.closest(".fav-btn")) {
-        SFX.click();
+      if (!e.target.closest(".card-key-btn")) {
         openModal(anime);
       }
     });
@@ -208,8 +109,6 @@ searchInput.addEventListener("input", (e) => {
 // === 2. MODAL & VIDEO LOGIC ===
 // ============================
 function openModal(anime) {
-  SFX.modal();
-
   document.getElementById("modal-title").innerText = anime.title;
   document.getElementById("modal-id").innerText = anime.id;
 
@@ -247,7 +146,6 @@ function openModal(anime) {
 }
 
 window.playVideo = (videoId) => {
-  SFX.click();
   const bgMusic = document.getElementById("bg-music");
   if (bgMusic && !bgMusic.paused) {
     bgMusic.pause();
@@ -287,6 +185,13 @@ function initLoader() {
     if (progress > 100) progress = 100;
     progressBar.style.width = `${progress}%`;
     percentText.innerText = `${progress}%`;
+
+    // Update loading text
+    if (progress < 30) loaderTextSpan.innerText = "INITIALIZING...";
+    else if (progress < 60) loaderTextSpan.innerText = "LOADING DATABASE...";
+    else if (progress < 90) loaderTextSpan.innerText = "PREPARING INTERFACE...";
+    else loaderTextSpan.innerText = "ALMOST READY...";
+
     if (progress === 100) {
       clearInterval(interval);
       promptUserClick();
@@ -296,10 +201,10 @@ function initLoader() {
 
 function promptUserClick() {
   percentText.innerText = "READY";
-  percentText.classList.add("blink");
+  loaderTextSpan.innerText = "CLICK TO ENTER";
   progressBar.style.boxShadow = "0 0 15px #00ff00";
   progressBar.style.backgroundColor = "#00ff00";
-  loaderText.innerHTML = `<span style="color:#00ff00; font-weight:bold;">> SYSTEM READY. CLICK TO INITIALIZE.</span>`;
+  document.querySelector(".loader-status").classList.add("ready");
   document.addEventListener("click", enterSite, { once: true });
 }
 
@@ -379,7 +284,6 @@ function updatePlayState(playing) {
 
 playBtn.addEventListener("click", (e) => {
   e.stopPropagation();
-  SFX.click();
   if (isPlaying) {
     audio.pause();
     updatePlayState(false);
@@ -402,13 +306,8 @@ document.addEventListener("mousemove", (e) => {
     cursorRing.style.top = `${e.clientY}px`;
   }, 50);
 });
-
-const addHover = (e) => {
-  document.body.classList.add("hovering");
-  SFX.hover();
-};
+const addHover = () => document.body.classList.add("hovering");
 const removeHover = () => document.body.classList.remove("hovering");
-
 const canvas = document.getElementById("canvas-bg");
 const ctx = canvas.getContext("2d");
 let width, height;
@@ -455,7 +354,6 @@ function animate() {
   requestAnimationFrame(animate);
 }
 window.addEventListener("resize", resize);
-
 setInterval(() => {
   document.querySelectorAll("a, button, input, .anime-card").forEach((el) => {
     el.removeEventListener("mouseenter", addHover);
