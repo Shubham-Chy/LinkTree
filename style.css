@@ -49,6 +49,21 @@ body::before {
     opacity: 0.3; filter: grayscale(100%) contrast(1.2); z-index: -3;
 }
 
+/* === SYSTEM STATUS PANEL (NEW) === */
+.system-status {
+    position: fixed; top: 30px; right: 30px; z-index: 100;
+    background: rgba(0,0,0,0.7); border: 1px solid #333;
+    padding: 15px 20px; font-size: 10px; min-width: 200px;
+    backdrop-filter: blur(5px);
+}
+.status-line {
+    display: flex; justify-content: space-between; margin-bottom: 8px;
+}
+.status-line:last-child { margin-bottom: 0; }
+.status-label { color: #666; font-weight: bold; }
+.status-value { color: white; font-weight: bold; }
+.status-online { color: #00ff00; text-shadow: 0 0 5px #00ff00; }
+
 /* === LOADER === */
 #loader {
     position: fixed; inset: 0; background: black; z-index: 5000;
@@ -56,6 +71,7 @@ body::before {
     flex-direction: column;
 }
 .loader-content { width: 300px; }
+.loader-top { display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
 .progress-container { width: 100%; height: 2px; background: #222; margin-bottom: 10px; }
 #progress-bar { width: 0%; height: 100%; background: white; box-shadow: 0 0 10px white; transition: width 0.1s; }
 .loader-text { font-size: 10px; color: #666; letter-spacing: 1px; }
@@ -71,7 +87,7 @@ body::before {
 }
 .ui-corner { position: fixed; width: 20px; height: 20px; border-color: rgba(255,255,255,0.3); z-index: 10; }
 .tl { top: 30px; left: 30px; border-top: 1px solid; border-left: 1px solid; }
-.tr { top: 30px; right: 30px; border-top: 1px solid; border-right: 1px solid; }
+.tr { top: 120px; right: 30px; border-top: 1px solid; border-right: 1px solid; } /* Moved down to avoid status panel */
 .bl { bottom: 30px; left: 30px; border-bottom: 1px solid; border-left: 1px solid; }
 .br { bottom: 30px; right: 30px; border-bottom: 1px solid; border-right: 1px solid; }
 
@@ -109,6 +125,23 @@ h1.glitch-text { font-size: 3rem; font-weight: 800; font-style: italic; margin-b
 }
 .anime-card:hover { border-color: white; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); z-index: 10; }
 .anime-card:hover img { filter: grayscale(0%) contrast(1); transform: scale(1.05); opacity: 1; }
+
+/* Favorite Heart Button (NEW) */
+.fav-btn {
+    position: absolute; top: 10px; right: 10px; z-index: 5;
+    background: rgba(0,0,0,0.7); border: 1px solid #555; 
+    width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;
+    cursor: none; transition: all 0.2s;
+    opacity: 0; /* Hidden by default */
+}
+.anime-card:hover .fav-btn { opacity: 1; } /* Show on hover */
+.fav-btn.active {
+    background: rgba(255,0,0,0.8); border-color: #ff0000;
+    opacity: 1 !important; /* Always visible when active */
+}
+.fav-btn:hover { transform: scale(1.1); }
+.fav-btn svg { width: 18px; height: 18px; fill: none; stroke: white; }
+.fav-btn.active svg { fill: white; stroke: white; }
 
 .card-overlay {
     position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px;
@@ -177,7 +210,7 @@ h1.glitch-text { font-size: 3rem; font-weight: 800; font-style: italic; margin-b
 .key-btn { font-size: 10px; padding: 2px 6px; border: 1px solid #555; background: #111; color: #fff; }
 .drive-btn:hover .key-btn { border-color: #000; background: #eee; color: #000; }
 
-/* === FOOTER ICONS (FORCE WHITE) === */
+/* === FOOTER ICONS === */
 .footer-links {
     display: flex; gap: 30px; margin-top: auto; padding-top: 20px; opacity: 0.8;
 }
@@ -198,4 +231,9 @@ h1.glitch-text { font-size: 3rem; font-weight: 800; font-style: italic; margin-b
 .play-btn { background: transparent; border: 1px solid #444; color: white; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: none; }
 .play-btn:hover { background: white; color: black; border-color: white; }
 
-@media (max-width: 768px) { h1.glitch-text { font-size: 2rem; } .vertical-text, .ui-corner { display: none; } #app { padding: 40px 20px; } }
+@media (max-width: 768px) { 
+    h1.glitch-text { font-size: 2rem; } 
+    .vertical-text, .ui-corner { display: none; } 
+    #app { padding: 40px 20px; } 
+    .system-status { top: 10px; right: 10px; font-size: 8px; padding: 10px; }
+}
