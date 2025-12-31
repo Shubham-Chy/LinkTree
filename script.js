@@ -2,7 +2,7 @@
 const config = {
   loaderSpeed: 30,
   particleCount: 60,
-  audioVolume: 0.001,
+  audioVolume: 0.009,
 };
 
 // === DOM ELEMENTS ===
